@@ -12,9 +12,10 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "hyperquest": "~0.1.7",
     "concat-stream": "~1.0.1",
-    "joi": "~1.2.0"
+    "joi": "~1.2.0",
+    "request": "~2.33.0",
+    "q": "~1.0.0"
   },
   "devDependencies": {
     "should": "~1.2.2",
