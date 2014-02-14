@@ -14,14 +14,14 @@ var Rovi = function(config) {
     return this;
 };
 
-_.each(apis, function (contentType) {
-    _.each(apis[contentType], function (service) {
+_.each(apis, function (services, contentType) {
+    _.each(apis[contentType], function (service, key) {
         Rovi.prototype[service.method] = function (options, callback) {
             if (_.isFunction(options)) {
                 callback = options;
                 options = {}
             }
-            return roviRequest.makeRequest(this.key, this.secret, options, map, callback);
+            return roviRequest.makeRequest(this.key, this.secret, options, service, callback);
         };
     });
 });
