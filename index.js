@@ -1,8 +1,10 @@
-var api = require('./lib/api');
+var apis = require('./lib/api');
 var roviRequest = require('./lib/request');
+var _ = require('lodash');
+
 
 var Rovi = function(config) {
-    if (!config || !config.hasOwnProperty('key') && !config.hasOwnProperty('secret')) {
+    if (!config || !_.has(config, 'key') && !_.has(config, 'secret')) {
         throw new Error('Cannot create rovi object without valid key and shared secret');
     }
 
@@ -12,21 +14,16 @@ var Rovi = function(config) {
     return this;
 };
 
-for (var key in api) {
-    if (api.hasOwnProperty(key)) {
-        for (var key2 in api[key]) {
-            if (api[key].hasOwnProperty(key2)) {
-                var map = api[key][key2];
-                Rovi.prototype[map.method] = function(options, cb) {
-                    if (typeof(options) === 'function') {
-                        cb = options;
-                        options = {};
-                    }
-                    return roviRequest.makeRequest(this.key, this.secret, options, map, cb);
-                }
+_.each(apis, function (contentType) {
+    _.each(apis[contentType], function (service) {
+        Rovi.prototype[service.method] = function (options, callback) {
+            if (_.isFunction(options)) {
+                callback = options;
+                options = {}
             }
-        }
-    }
-}
+            return roviRequest.makeRequest(this.key, this.secret, options, map, callback);
+        };
+    });
+});
 
 module.exports = Rovi;
